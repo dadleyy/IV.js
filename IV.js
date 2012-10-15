@@ -1,3 +1,16 @@
+/*
+ *
+ * IV.js - The multi-filter easy input validation library.
+ *
+ * Version 1.0
+ *
+ * Author - Danny Hadley (danny@dadleyy.com)
+ *
+ * Contributors:
+ *   - 
+ *
+ *
+*/
 var IV = (function(){
 
 /* private stuff */
