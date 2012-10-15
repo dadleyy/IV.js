@@ -8,9 +8,16 @@ var formClass      = "form.IValidate",
         "any"    : function( element ){
             return $(element).val() != "" && $(element).val() != getInputDefault( element );  
         },
-        "length" : function( element ){
-            var len = ( (element.dataset) ? element.dataset.minlength || $(element).data("minlength") ) || 4;
-            return $(element).val().length > len && inputFilters["any"](element);
+        "min" : function( element ){
+            var minlen = ( $(element).data("minlength") ) ? $(element).data("minlength") : 4;
+            return $(element).val().length > minlen && inputFilters["any"](element);
+        },
+        "max" : function( element ){
+            var maxlen = ( $(element).data("maxlength") ) ? $(element).data("maxlength") : 20;
+            return $(element).val().length < maxlen && inputFilters["any"](element);
+        },
+        "minmax" : function( element ){
+          return inputFilters["min"](element) && inputFilters["max"](element);
         },
         "email"  : function( element ){
             return $(element).val().match(/.+\@.+\..+/) != null && inputFilters["any"](element);   
@@ -38,7 +45,7 @@ function validate( ){
     for(var i = 0; i < this.inputs.length; i++){
         var input = this.inputs[i],
             type  = getInputFilter( input ),
-            valid = inputFilters[type](input);
+            valid = (inputFilters[type]) ? inputFilters[type](input) : inputFilters["any"](input);
             
         if(!valid){ 
             $(input).addClass("errored").val( getInputDefault( input ) ); 
@@ -57,6 +64,12 @@ function focal( ){
         $(this).val('');
     }
 };
+
+function blurer( ){
+    if( $(this).val() == '' ){
+        $(this).val( getInputDefault( this ) );
+    }
+}
 
 function keyManager( evt ){
    if( evt.keyCode == 13 ){
@@ -96,7 +109,8 @@ return function( opts ){
 
     var self = this;
     this.$inputs.focus(function(){ return focal.apply(this); })
-                .keydown(function(evt){ return keyManager.apply(self,[evt]); });
+                .keydown(function(evt){ return keyManager.apply(self,[evt]); })
+                .blur(function(){ return blurer.apply(this); });
                 
     this.$submit.click(function(evt){ return validate.apply(self); });
 };
