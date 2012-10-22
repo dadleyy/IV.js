@@ -6,6 +6,7 @@ About
 ---
 IV.js is a simple javascript library for validating inputs before sending them off to the server. The  library has several different filters that can be applied to input values during the process.
 
+[Project Page][2]
 
 Dependencies
 -------
@@ -97,4 +98,5 @@ Tutorial coming soon.
 
 
   [1]: http://jquery.com/
+  [2]: http://dadleyy.github.com/IV.js/
   
