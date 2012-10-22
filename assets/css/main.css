@@ -5,14 +5,73 @@
 body > section.pw{
     margin-top: 50px;
 }
+
+body > section.pw article.title{
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #454545;
+    height: 40px;
+}
+
+
 body > section.pw article.title h1{
     font-family: 'Josefin Slab', serif;
     font-size: 46px;
     font-weight: 700;
     color: #353535;
+    line-height: 40px;
 }
+
 body > section.pw article.title h1 em{
     font-style: normal;
-    font-family: 300;
+    font-weight: 300;
     color: #3f3f3f;
+    font-size: 20px;
 }
+body > section.pw section.bottom{ font-family: 'Raleway', sans-serif; line-height: 1.5em; }
+body > section.pw section.bottom p{
+    font-weight: 200; 
+    color: #555;
+}
+body > section.pw section.bottom h3{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+body > section.pw section.bottom article.hw p{ margin-bottom: 10px; }
+
+
+body > section.pw section.bottom article.about{ }
+body > section.pw section.bottom article.about dl{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #4f4f4f;
+}
+body > section.pw article.about dl dt{ font-weight: 400; color: #4f4f4f; margin-bottom: 5px; }
+
+body > section.pw article.about p,
+body > section.pw article.about dl dd{ font-weight: 200; color: #555; }
+
+body > section.pw section.bottom article.example{ }
+body > section.pw section.bottom article.example ul{ list-style: none; padding: 0px; margin: 0px; }
+body > section.pw section.bottom article.example ul li{ 
+    list-style: none; 
+    display: block;
+    margin-bttom: 20px; 
+}
+body > section.pw section.bottom article.example ul li dl{ margin-bottom: 40px; }
+body > section.pw section.bottom article.example ul li dl dt{ font-weight: 400; color: #4f4f4f; margin-bottom: 5px; }
+body > section.pw section.bottom article.example ul li dl dd p{ margin-bottom: 10px; }
+body > section.pw section.bottom article.example pre{
+    font-size: 12px;
+    background-color: rgba(0,0,0,0.1);
+    overflow-x: scroll;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+a{ 
+    text-decoration: none;
+    color: #88aeef;
+}
+a:hover{ color: black; }

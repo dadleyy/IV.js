@@ -81,7 +81,8 @@ body{
 }
 
 .bs{ box-shadow: 0px 0px 6px rgba(0,0,0,0.3); }
-.hp{ width: 50%; }
+.hw{ width: 460px; }
+.hw-pad{ width: 460px; padding: 10px; }
 .whole{ width: 100%; }
 .pw{ width: 960px; }
 .pw .four{ width: 384px; }

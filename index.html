@@ -16,9 +16,74 @@
 
     <section class="content pw middle cf">
         
-        <article class="title">
-            <h1>IV.js <em>all your input validation needs</em></h1>
+        <article class="title pw">
+            <h1>IV.js <em>- for all your input validation needs</em></h1>
         </article>
+        
+        <section class="bottom cf">
+            <article class="about hw-pad f">
+                <h3>About</h3>
+                <p>This library was created to provide a intutive way to provide validation filters that are usefull in processing user input. The methods in this library can be easily selected right on the DOM to give a native feel to the input element tags. Feel free to help out and contribute to the list in the repository at <a href="https://github.com/dadleyy/IV.js" title="" class="t">github.com</a></p>
+                <dl>
+                    <dt>What is it?</dt>
+                    <dd></dd>
+                </dl>
+                <dl>
+                    <dt>Why use it?</dt>
+                    <dd></dd>
+                </dl>
+                <dl>
+                    <dt>What does it need</dt>
+                    <dd></dd>
+                </dl>
+            </article>
+            
+            <article class="example hw-pad f">
+                <h3>Useage</h3>
+                <ul>
+                    <li>
+                        <dl>
+                            <dt>Step #1: the HTML</dt>
+                            <dd>
+                                <p>The only thing IV.js looks for that may differ from your normal form is the addition of a a few attribute tags. Primarily, adding the <code>IValidate</code> class to the form signals the library to apply it's callbacks to the element</p>
+                                <p>Example form:</p>
+                                <pre><code>
+&lt;form action="something" method="post"&gt;    
+    &lt;!-- first, a basic input with "cant-be-empty" (default) --&gt;
+    &lt;input type="text" class="IValidate" name="displayname"&gt;
+    
+    &lt;!-- next, am email input with the email filter --&gt;
+    &lt;input type="text" class="IValidate" name="email" data-filter="email"&gt;
+    
+    &lt;!-- now, an input with a placeholder! --&gt;
+    &lt;input type="text" class="IValidate" name="birthday" data-filter="any" data-placeholder="MM/YY"&gt;
+    
+    &lt;!-- lastly, add the trigger button --&gt;
+    &lt;input type="button" class="IValidator" value="go"&gt;
+&lt;/form&gt;    
+                                </code></pre>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt>Step #2: the JavaScript</dt>
+                            <dd>
+                                <p>Keeping in mind that <a href="http://jquery.com/" title="">jquery</a> is required for this library, our page now has everything we need to get started setting up the inputs to their correct methods. To do so the most simple way, we add this code to our page inside a <code>&lt;script&gt;</code> tag:</p>
+                                <pre><code>
+var validator;
+$(document).ready(function(){
+    validator = new IV();
+});
+                                </code></pre>
+                                <p>With this little bit of code, IV.js finds all of the forms on the page with the appropriate class definitions, ad applys the IV.js filters to the form's input elements.</p>
+                            </dd>
+                        </dl>
+                    </li>
+                </ul>
+            </article>
+            
+        </section>
         
     </section>
 
