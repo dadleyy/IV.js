@@ -37,7 +37,7 @@ body > section.pw section.bottom h3{
     font-size: 20px;
     margin-bottom: 10px;
 }
-body > section.pw section.bottom article.hw p{ margin-bottom: 10px; }
+body > section.pw section.bottom article p{ margin-bottom: 10px; }
 
 
 body > section.pw section.bottom article.about{ }
@@ -51,6 +51,22 @@ body > section.pw article.about dl dt{ font-weight: 400; color: #4f4f4f; margin-
 
 body > section.pw article.about p,
 body > section.pw article.about dl dd{ font-weight: 200; color: #555; }
+
+body > section.pw section.bottom article.about section.example{
+    width: 460px;
+}
+body > section.pw section.bottom article.about section.example input.texter{
+    width: 400px;
+    padding-left: 10px;
+    font-size: 16px;
+    color: #5f5f5f;
+    height: 40px;
+    background-color: rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+    border-radius: 3px 0px 3px 0px;
+}
+body > section.pw section.bottom article.about section.example input.texter:focus{ color: #444; }
+body > section.pw section.bottom article.about section.example input.texter.errored{ color: #9e6223; }
 
 body > section.pw section.bottom article.example{ }
 body > section.pw section.bottom article.example ul{ list-style: none; padding: 0px; margin: 0px; }

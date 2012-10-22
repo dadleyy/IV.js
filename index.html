@@ -24,18 +24,22 @@
             <article class="about hw-pad f">
                 <h3>About</h3>
                 <p>This library was created to provide a intutive way to provide validation filters that are usefull in processing user input. The methods in this library can be easily selected right on the DOM to give a native feel to the input element tags. Feel free to help out and contribute to the list in the repository at <a href="https://github.com/dadleyy/IV.js" title="" class="t">github.com</a></p>
-                <dl>
-                    <dt>What is it?</dt>
-                    <dd></dd>
-                </dl>
-                <dl>
-                    <dt>Why use it?</dt>
-                    <dd></dd>
-                </dl>
-                <dl>
-                    <dt>What does it need</dt>
-                    <dd></dd>
-                </dl>
+                <h3>Live example:</h3>
+                <section class="IValidate example" id="example">
+                    <input type="text" name="email" class="IValidate texter t" data-filter="email" data-placeholder="email">
+                    <input type="text" name="min" class="IValidate texter t" data-filter="min" data-placeholder="min length values (3)" data-minlength="2">
+                    <input type="text" name="max" class="IValidate texter t" data-filter="max" data-placeholder="max length values (8)" data-maxlength="8">
+                </section>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        var validate = new IV({    
+                            form     : document.getElementById('example'),                        
+                            callback : function(){
+                                this.$form.append("<span>SUCCESS!</span>");
+                            }
+                        });
+                    });
+                </script>
             </article>
             
             <article class="example hw-pad f">
