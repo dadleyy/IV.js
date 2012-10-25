@@ -2,7 +2,7 @@
  *
  * IV.js - The multi-filter easy input validation library.
  *
- * Version 1.0
+ * Version 1.2 
  *
  * Author - Danny Hadley (danny@dadleyy.com)
  *
@@ -27,7 +27,7 @@ var formClass      = "form.IValidate",
         },
         "max" : function( element ){
             var maxlen = ( $(element).data("maxlength") ) ? $(element).data("maxlength") : 20;
-            return $(element).val().length < maxlen && inputFilters["any"](element);
+            return $(element).val().length <= maxlen && inputFilters["any"](element);
         },
         "minmax" : function( element ){
           return inputFilters["min"](element) && inputFilters["max"](element);
@@ -41,7 +41,15 @@ var formClass      = "form.IValidate",
         "password" : "pass",
         "email"    : "Email Address", 
         "any"      : ""
-    }
+    },
+    inputErrorMessages = {
+        "max"    : "input was too long",
+        "min"    : "input was not long enough",
+        "any"    : "input was empty or unchanged from placeholder",
+        "minmax" : "input was too long or not long enough",  
+        "email"  : "input was not a valid email address"
+    },
+    submitted = false;
 
 function getInputFilter( element ){
     var dt = (element.dataset) ? element.dataset.filter : $(element).attr("data-filter");
@@ -54,7 +62,9 @@ function getInputDefault( element ){
 };
 
 function validate( ){
-    var error = false;
+    var error    = false,
+        messages = { };
+        
     for(var i = 0; i < this.inputs.length; i++){
         var input = this.inputs[i],
             type  = getInputFilter( input ),
@@ -62,18 +72,24 @@ function validate( ){
             
         if(!valid){ 
             $(input).addClass("errored").val( getInputDefault( input ) ); 
+            messages[i] = {
+                element : input,
+                message : (inputErrorMessages[type]) ? inputErrorMessages[type] : inputErrorMessages["any"]   
+            }
             error = true; 
         }
     };
-    if(error){ return; }
+    if(error){ return this.errorcallback.apply(this,[messages]); }
     
+    submitted = true;
     this.submitcallback.apply(this);
     this.$form.submit( );
 };
 
 function focal( ){
     $(this).removeClass("errored");  
-    if( $(this).val() == getInputDefault( this ) ){
+    if( $(this).val() == getInputDefault( this ) || submitted ){
+        submitted = false;
         $(this).val('');
     }
 };
@@ -101,6 +117,15 @@ function keyManager( evt ){
    
 };
 
+function restart(opts){
+    this.$inputs.each(function(){
+        $(this).val(getInputDefault(this));
+        if(opts.error){
+            $(this).addClass("errored");
+        }
+    });
+}
+
 /* public stuff */
 return function( opts ){
     opts = opts || { };
@@ -115,11 +140,14 @@ return function( opts ){
     this.inputs  = this.$inputs.get();
     
     this.submitcallback = opts.callback || function(){ };
+    this.errorcallback  = opts.ecallback || function(){ };
     
     this.$inputs.each(function(){
         $(this).val( getInputDefault( this ) );
     });
-
+    
+    this.restart = restart;
+    
     var self = this;
     this.$inputs.focus(function(){ return focal.apply(this); })
                 .keydown(function(evt){ return keyManager.apply(self,[evt]); })
