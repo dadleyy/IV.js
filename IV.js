@@ -2,7 +2,7 @@
  *
  * IV.js - The multi-filter easy input validation library.
  *
- * Version 1.3 
+ * Version 1.4 
  *
  * Author - Danny Hadley (danny@dadleyy.com)
  *
@@ -14,10 +14,10 @@
 var IV = (function(){
 
 /* private stuff */
-var formClass      = "form.IValidate",
-    submitClass    = "input.IValidator",
-    inputSelection = "input.IValidate",
-    inputFilters   = {
+var formClass       = "form.IValidate",
+    submitClass     = "input.IValidator",
+    inputSelections = ["input.IValidate","textarea.IValidate"],
+    inputFilters    = {
         "any"    : function( element ){
             return $(element).val() != "" && $(element).val() != getInputDefault( element );  
         },
@@ -141,7 +141,7 @@ return function( opts ){
     this.submit  = opts.submit || this.$form.find(submitClass).get()[0];
     this.$submit = $(this.submit);
     
-    this.$inputs = this.$form.find(inputSelection);
+    this.$inputs = this.$form.find( (opts.inputSelections) ? opts.inputSelections.join(',') : inputSelections.join(',') );
     this.inputs  = this.$inputs.get();
     
     this.submitcallback = opts.callback || function(){ };
