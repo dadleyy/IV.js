@@ -35,11 +35,15 @@ var formClass      = "form.IValidate",
         "email"  : function( element ){
             return $(element).val().match(/.+\@.+\..+/) != null && inputFilters["any"](element);   
         },
+        "phone"  : function( element ){
+            return $(element).val().match(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/) != null && inputFilters["any"](element);
+        }
     },
     inputDefaults  = {
         "name"     : "Name",
         "password" : "pass",
         "email"    : "Email Address", 
+        "phone"    : "xxx-xxx-xxxx",
         "any"      : ""
     },
     inputErrorMessages = {
@@ -47,7 +51,8 @@ var formClass      = "form.IValidate",
         "min"    : "input was not long enough",
         "any"    : "input was empty or unchanged from placeholder",
         "minmax" : "input was too long or not long enough",  
-        "email"  : "input was not a valid email address"
+        "email"  : "input was not a valid email address",
+        "phone"  : "input was not a valid (xxx-xxx-xxxx) phone number"
     },
     submitted = false;
 
