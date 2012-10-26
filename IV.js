@@ -5,6 +5,7 @@
  * Version 1.4 
  *
  * Author - Danny Hadley (danny@dadleyy.com)
+ * Repo   - http://dadleyy.github.com/IV.js/
  *
  * Contributors:
  *   - 
