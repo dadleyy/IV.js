@@ -3,7 +3,6 @@
  * http://dadleyy.github.com/IV.js/            *
  * (c) 2013 Danny Hadley under the MIT license *
  * ******************************************* */ 
-
 (function () {
 
     "use strict";
