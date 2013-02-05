@@ -1,59 +1,106 @@
-/*
- *
- * IV.js - The multi-filter easy input validation library.
- *
- * Version 1.0
- *
- * Author - Danny Hadley (danny@dadleyy.com)
- *
- * Contributors:
- *   - 
- *
- *
-*/
-var IV = (function(){
+/* ******************************************* * 
+ * IV.js 1.5                                   *
+ * http://dadleyy.github.com/IV.js/            *
+ * (c) 2013 Danny Hadley under the MIT license *
+ * ******************************************* */ 
 
-/* private stuff */
-var formClass      = "form.IValidate",
-    submitClass    = "input.IValidator",
-    inputSelection = "input.IValidate",
-    inputFilters   = {
-        "any"    : function( element ){
-            return $(element).val() != "" && $(element).val() != getInputDefault( element );  
-        },
-        "min" : function( element ){
-            var minlen = ( $(element).data("minlength") ) ? $(element).data("minlength") : 4;
-            return $(element).val().length > minlen && inputFilters["any"](element);
-        },
-        "max" : function( element ){
-            var maxlen = ( $(element).data("maxlength") ) ? $(element).data("maxlength") : 20;
-            return $(element).val().length < maxlen && inputFilters["any"](element);
-        },
-        "minmax" : function( element ){
-          return inputFilters["min"](element) && inputFilters["max"](element);
-        },
-        "email"  : function( element ){
-            return $(element).val().match(/.+\@.+\..+/) != null && inputFilters["any"](element);   
-        },
+(function () {
+
+    "use strict";
+    
+    
+    var /* private variables */
+        formClass      = "form.IValidate",
+        submitClass    = "input.IValidator",
+        inputSelection = "input.IValidate",
+        inputFilters,
+        inputDefaults,
+        
+        /* private functions */
+        getInputFilter,
+        getInputDefault,
+        validate,
+        focal,
+        blurer,
+        keyManager,
+        
+        /* IV constructor */
+        _IV;
+        
+    
+/* inputDefaults
+ *
+ * The default values that will be used based 
+ * on the filter 
+*/    
+inputDefaults = {
+    "name"     : "Name",
+    "password" : "pass",
+    "email"    : "Email Address", 
+    "any"      : ""
+}
+
+/* inputFilters
+ *
+ * Filter functions 
+*/    
+inputFilters = {
+    "any"    : function( element ){
+        return $(element).val() != "" 
+                    && $(element).val() != getInputDefault( element );  
     },
-    inputDefaults  = {
-        "name"     : "Name",
-        "password" : "pass",
-        "email"    : "Email Address", 
-        "any"      : ""
+    "min" : function( element ){
+        var minlen = ( $(element).data("minlength") ) ? $(element).data("minlength") : 4;
+        return $(element).val().length > minlen 
+                    && inputFilters["any"](element);
+    },
+    "max" : function( element ){
+        var maxlen = ( $(element).data("maxlength") ) ? $(element).data("maxlength") : 20;
+        return $(element).val().length < maxlen 
+                    && inputFilters["any"](element);
+    },
+    "minmax" : function( element ){
+      return inputFilters["min"](element) 
+                    && inputFilters["max"](element);
+    },
+    "email"  : function( element ){
+        return $(element).val().match(/.+\@.+\..+/) != null 
+                    && inputFilters["any"](element);   
+    },
+    "phone"  : function( element ){
+        return $(element).val().match(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/) != null 
+                    && inputFilters["any"](element);
     }
+};
 
-function getInputFilter( element ){
+/* getInputFilter
+ *
+ * Gets the filter name to be applied
+ * @param {object} element A DOM element
+*/
+getInputFilter = function ( element ) {
     var dt = (element.dataset) ? element.dataset.filter : $(element).attr("data-filter");
     return dt || "any";
 };
 
-function getInputDefault( element ){
+
+/* getInputDefault
+ *
+ * Gets the placeholder of the element
+ * @param {object} element A DOM element
+*/
+getInputDefault = function ( element ) {
     var dt = (element.dataset) ? element.dataset.placeholder : $(element).attr("data-placeholder");
     return inputDefaults[dt] || dt || "";
 };
 
-function validate( ){
+/* validate
+ *
+ * Checks to see if all input elements
+ * pass the filter that was specified by
+ * their data-filter attribute
+*/
+validate = function ( ) {
     var error = false;
     for(var i = 0; i < this.inputs.length; i++){
         var input = this.inputs[i],
@@ -71,27 +118,42 @@ function validate( ){
     this.$form.submit( );
 };
 
-function focal( ){
+/* focal
+ *
+ * onFocus event handler for all input
+ * elements to check for errored or
+ * original values
+*/
+focal = function ( ) {
     $(this).removeClass("errored");  
     if( $(this).val() == getInputDefault( this ) ){
         $(this).val('');
     }
 };
 
-function blurer( ){
+/* blurer
+ *
+ * onBlur event handler for all input
+ * elements 
+*/
+blurer = function ( ) {
     if( $(this).val() == '' ){
         $(this).val( getInputDefault( this ) );
     }
 }
 
-function keyManager( evt ){
+/* keyManager
+ * 
+ * 
+ * @param {object} evt The event passed
+*/
+keyManager = function ( evt ) {
+   
    if( evt.keyCode == 13 ){
-       if( evt.preventDefault ){
-           evt.preventDefault( );
-       }
        validate.bind(this)();
-       return;
+       return evt.preventDefault && evt.preventDefault();
    }
+   
    var tar  = evt.target,
        $tar = $(tar);
     
@@ -101,8 +163,15 @@ function keyManager( evt ){
    
 };
 
-/* public stuff */
-return function( opts ){
+
+/* _IV
+ * The constructor for IV form validation
+ * objects. 
+ *
+ * @constructor 
+ * @param {object} opts Optional initialization
+*/
+_IV = function ( opts ) {
     opts = opts || { };
     
     this.form   = opts.form || $(document).find(formClass).get()[0];
@@ -114,18 +183,21 @@ return function( opts ){
     this.$inputs = this.$form.find(inputSelection);
     this.inputs  = this.$inputs.get();
     
-    this.submitcallback = opts.callback || function(){ };
+    this.submitcallback = opts.callback || function () { };
     
     this.$inputs.each(function(){
         $(this).val( getInputDefault( this ) );
     });
 
     var self = this;
-    this.$inputs.focus(function(){ return focal.apply(this); })
-                .keydown(function(evt){ return keyManager.apply(self,[evt]); })
-                .blur(function(){ return blurer.apply(this); });
+    this.$inputs.focus(function () { return focal.apply(this); })
+                .keydown(function (evt) { return keyManager.apply(self,[evt]); })
+                .blur(function () { return blurer.apply(this); });
                 
-    this.$submit.click(function(evt){ return validate.apply(self); });
+    this.$submit.click(function (evt) { return validate.apply(self); });
 };
+
+/* globalize the IV constructor */
+window.IV = _IV;
 
 })( );
