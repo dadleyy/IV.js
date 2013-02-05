@@ -143,7 +143,8 @@ blurer = function ( ) {
 
 /* keyManager
  * 
- * 
+ * Handles the enter key while focused on an input box
+ * and clearing out old errored input boxes
  * @param {object} evt The event passed
 */
 keyManager = function ( evt ) {
