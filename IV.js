@@ -1,5 +1,5 @@
 /* ******************************************* * 
- * IV.js 1.6                                   *
+ * IV.js 1.7                                   *
  * http://dadleyy.github.com/IV.js/            *
  * (c) 2013 Danny Hadley under the MIT license *
  * ******************************************* */ 
@@ -10,8 +10,8 @@
     
     var /* private variables */
         formClass      = "form.IValidate",
-        submitClass    = "input.IValidator",
-        inputSelection = "input.IValidate",
+        submitClasses  = ["input.IValidator","button.IValidator"],
+        inputClasses  = ["input.IValidate","textarea.IValidate"],
         inputFilters,
         inputDefaults,
         
@@ -44,7 +44,9 @@ inputDefaults = {
  * Filter functions 
 */    
 inputFilters = {
-    "any"    : function( element ){
+    "optional" : function( element ) { return true; },
+    
+    "any" : function( element ){
         return $(element).val() != "" 
                     && $(element).val() != getInputDefault( element );  
     },
@@ -100,7 +102,7 @@ getInputDefault = function ( element ) {
  * their data-filter attribute
 */
 validate = function ( ) {
-    var error  = false,
+    var errors = [ ],
         values = { };
     
     for(var i = 0; i < this.inputs.length; i++){
@@ -111,13 +113,19 @@ validate = function ( ) {
         
         if(!valid){ 
             $(input).addClass("errored").val( getInputDefault( input ) ); 
-            error = true; 
+            
+            errors.push({
+                input : input,
+                type  : type,
+                name  : name
+            });
+           
         } else {
             values[name] = $(input).val();
         }
     };
     
-    if(error){ return; }
+    if( errors.length !== 0 ){ return this.errorcallback( errors ); }
     
     return (this.submitcallback && this.submitcallback.call(this,values)) || this.$form.submit( );
 };
@@ -182,13 +190,20 @@ _IV = function ( opts ) {
     this.form   = opts.form || $(document).find(formClass).get()[0];
     this.$form  = $(this.form);
     
-    this.submit  = opts.submit || this.$form.find(submitClass).get()[0];
+    this.submit  = opts.submit || this.$form.find( submitClasses.join(",") ).get()[0];
     this.$submit = $(this.submit);
     
-    this.$inputs = this.$form.find(inputSelection);
+    this.$inputs = this.$form.find( inputClasses.join(",") );
     this.inputs  = this.$inputs.get();
     
+    var hash = { };
+    this.$inputs.each(function ( ) { 
+        hash[$(this).attr("name")] = this; 
+    });
+    this.hash = hash;
+        
     this.submitcallback = opts.callback || false;
+    this.errorcallback  = opts.ecallback || function ( ) { };
     
     var self = this;
     this.$inputs.focus(function () { return focal.apply(this); })
@@ -205,7 +220,7 @@ _IV = function ( opts ) {
 };
 
 _IV.prototype = {
-    version : "1.6",
+    version : "1.7",
     constructor : _IV,
 
     reset : function ( ) {
