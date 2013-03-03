@@ -1,5 +1,5 @@
 /* ******************************************* * 
- * IV.js 1.5                                   *
+ * IV.js 1.7                                   *
  * http://dadleyy.github.com/IV.js/            *
  * (c) 2013 Danny Hadley under the MIT license *
  * ******************************************* */ 
@@ -10,8 +10,8 @@
     
     var /* private variables */
         formClass      = "form.IValidate",
-        submitClass    = "input.IValidator",
-        inputSelection = "input.IValidate",
+        submitClasses  = ["input.IValidator","button.IValidator"],
+        inputClasses  = ["input.IValidate","textarea.IValidate"],
         inputFilters,
         inputDefaults,
         
@@ -24,7 +24,7 @@
         keyManager,
         
         /* IV constructor */
-        _IV;
+        _IV = function( ) { };
         
     
 /* inputDefaults
@@ -44,7 +44,9 @@ inputDefaults = {
  * Filter functions 
 */    
 inputFilters = {
-    "any"    : function( element ){
+    "optional" : function( element ) { return true; },
+    
+    "any" : function( element ){
         return $(element).val() != "" 
                     && $(element).val() != getInputDefault( element );  
     },
@@ -100,21 +102,32 @@ getInputDefault = function ( element ) {
  * their data-filter attribute
 */
 validate = function ( ) {
-    var error = false;
+    var errors = [ ],
+        values = { };
+    
     for(var i = 0; i < this.inputs.length; i++){
         var input = this.inputs[i],
             type  = getInputFilter( input ),
-            valid = (inputFilters[type]) ? inputFilters[type](input) : inputFilters["any"](input);
-            
+            valid = (inputFilters[type]) ? inputFilters[type](input) : inputFilters["any"](input),
+            name  = $(input).attr("name") || i;
+        
         if(!valid){ 
             $(input).addClass("errored").val( getInputDefault( input ) ); 
-            error = true; 
+            
+            errors.push({
+                input : input,
+                type  : type,
+                name  : name
+            });
+           
+        } else {
+            values[name] = $(input).val();
         }
     };
-    if(error){ return; }
     
-    this.submitcallback.apply(this);
-    this.$form.submit( );
+    if( errors.length !== 0 ){ return this.errorcallback( errors ); }
+    
+    return (this.submitcallback && this.submitcallback.call(this,values)) || this.$form.submit( );
 };
 
 /* focal
@@ -143,7 +156,8 @@ blurer = function ( ) {
 
 /* keyManager
  * 
- * 
+ * Handles the enter key while focused on an input box
+ * and clearing out old errored input boxes
  * @param {object} evt The event passed
 */
 keyManager = function ( evt ) {
@@ -176,24 +190,44 @@ _IV = function ( opts ) {
     this.form   = opts.form || $(document).find(formClass).get()[0];
     this.$form  = $(this.form);
     
-    this.submit  = opts.submit || this.$form.find(submitClass).get()[0];
+    this.submit  = opts.submit || this.$form.find( submitClasses.join(",") ).get()[0];
     this.$submit = $(this.submit);
     
-    this.$inputs = this.$form.find(inputSelection);
+    this.$inputs = this.$form.find( inputClasses.join(",") );
     this.inputs  = this.$inputs.get();
     
-    this.submitcallback = opts.callback || function () { };
-    
-    this.$inputs.each(function(){
-        $(this).val( getInputDefault( this ) );
+    var hash = { };
+    this.$inputs.each(function ( ) { 
+        hash[$(this).attr("name")] = this; 
     });
-
+    this.hash = hash;
+        
+    this.submitcallback = opts.callback || false;
+    this.errorcallback  = opts.ecallback || function ( ) { };
+    
     var self = this;
     this.$inputs.focus(function () { return focal.apply(this); })
                 .keydown(function (evt) { return keyManager.apply(self,[evt]); })
                 .blur(function () { return blurer.apply(this); });
                 
     this.$submit.click(function (evt) { return validate.apply(self); });
+        
+    this.reset( );    
+    
+    if( this.submitcallback ){
+        this.$form.submit(function (evt) { return evt.preventDefault && evt.preventDefault(); });
+    }
+};
+
+_IV.prototype = {
+    version : "1.7",
+    constructor : _IV,
+
+    reset : function ( ) {
+        this.$inputs.each(function () {
+            $(this).val( getInputDefault( this ) );
+        });
+    }
 };
 
 /* globalize the IV constructor */
