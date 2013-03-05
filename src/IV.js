@@ -1,5 +1,5 @@
 /* ******************************************* * 
- * IV.js 1.7                                   *
+ * IV.js 1.8                                   *
  * http://dadleyy.github.com/IV.js/            *
  * (c) 2013 Danny Hadley under the MIT license *
  * ******************************************* */ 
@@ -70,6 +70,10 @@ inputFilters = {
     },
     "phone"  : function( element ){
         return $(element).val().match(/^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/) != null 
+                    && inputFilters["any"](element);
+    },
+    "website" : function( element ){
+        return $(element).val().match(/^(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&amp;?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$/) != null 
                     && inputFilters["any"](element);
     }
 };
@@ -220,7 +224,7 @@ _IV = function ( opts ) {
 };
 
 _IV.prototype = {
-    version : "1.7",
+    version : "1.8",
     constructor : _IV,
 
     reset : function ( ) {
