@@ -110,7 +110,7 @@ getInputDefault = function ( element ) {
  * pass the filter that was specified by
  * their data-filter attribute
 */
-validate = function ( ) {
+validate = function ( evt ) {
     var errors = [ ],
         values = { };
     
@@ -132,7 +132,9 @@ validate = function ( ) {
                 type  : type,
                 name  : name
             });
-           
+            
+            evt.preventDefault && evt.preventDefault( );
+            
         } else {
             values[name] = $(input).val();
         }
@@ -176,7 +178,7 @@ blurer = function ( ) {
 keyManager = function ( evt ) {
    
    if( evt.keyCode == 13 ){
-       validate.bind(this)();
+       validate.call( this, evt );
        return evt.preventDefault && evt.preventDefault();
    }
    
@@ -223,7 +225,7 @@ _IV = function ( opts ) {
                 .keydown(function (evt) { return keyManager.apply(self,[evt]); })
                 .blur(function () { return blurer.apply(this); });
                 
-    this.$submit.click(function (evt) { return validate.apply(self); });
+    this.$submit.click(function (evt) { return validate.apply( self, [evt] ); });
         
     this.reset( );    
     
