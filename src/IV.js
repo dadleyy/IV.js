@@ -1,5 +1,5 @@
 /* ******************************************* * 
- * IV.js 1.8                                   *
+ * IV.js 1.9                                   *
  * http://dadleyy.github.com/IV.js/            *
  * (c) 2013 Danny Hadley under the MIT license *
  * ******************************************* */ 
@@ -75,6 +75,11 @@ inputFilters = {
     "website" : function( element ){
         return $(element).val().match(/^(([\w]+:)?\/\/)?(([\d\w]|%[a-fA-f\d]{2,2})+(:([\d\w]|%[a-fA-f\d]{2,2})+)?@)?([\d\w][-\d\w]{0,253}[\d\w]\.)+[\w]{2,4}(:[\d]+)?(\/([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)*(\?(&amp;?([-+_~.\d\w]|%[a-fA-f\d]{2,2})=?)*)?(#([-+_~.\d\w]|%[a-fA-f\d]{2,2})*)?$/) != null 
                     && inputFilters["any"](element);
+    },
+    "equal" : function( element ){ 
+        var target = $(element).data("target"),
+            other  = this.hash[target];
+        return ( !!other ) ? ( $(element).val() === $(other).val() && inputFilters["any"](element) ) : true;
     }
 };
 
@@ -112,7 +117,11 @@ validate = function ( ) {
     for(var i = 0; i < this.inputs.length; i++){
         var input = this.inputs[i],
             type  = getInputFilter( input ),
-            valid = (inputFilters[type]) ? inputFilters[type](input) : inputFilters["any"](input),
+            
+            valid = (inputFilters[type]) 
+                        ? inputFilters[type].call(this, input) 
+                        : inputFilters["any"].call(this, input),
+                        
             name  = $(input).attr("name") || i;
         
         if(!valid){ 
@@ -224,7 +233,7 @@ _IV = function ( opts ) {
 };
 
 _IV.prototype = {
-    version : "1.8",
+    version : "1.9",
     constructor : _IV,
 
     reset : function ( ) {
