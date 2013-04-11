@@ -1,6 +1,8 @@
 /* ******************************************* * 
- * IV.js 1.9                                   *
+ * IV.js 1.9.1                                 *
  * http://dadleyy.github.com/IV.js/            *
+ * Thanks to:                                  *
+ *  Rob Widdick <rob@36creative.com>           *
  * (c) 2013 Danny Hadley under the MIT license *
  * ******************************************* */ 
 (function () {
@@ -177,18 +179,18 @@ blurer = function ( ) {
 */
 keyManager = function ( evt ) {
    
-   if( evt.keyCode == 13 ){
-       validate.call( this, evt );
-       return evt.preventDefault && evt.preventDefault();
-   }
-   
-   var tar  = evt.target,
-       $tar = $(tar);
+    if(evt.target.type != "textarea" && evt.keyCode == 13 ){
+        validate.call( this, evt );
+        return evt.preventDefault && evt.preventDefault();
+    }
+    
+    var tar  = evt.target,
+        $tar = $(tar);
     
     if( $tar.hasClass("errored") ){
         $tar.val('').removeClass("errored");
     }   
-   
+    
 };
 
 
@@ -235,7 +237,7 @@ _IV = function ( opts ) {
 };
 
 _IV.prototype = {
-    version : "1.9",
+    version : "1.9.1",
     constructor : _IV,
 
     reset : function ( ) {
